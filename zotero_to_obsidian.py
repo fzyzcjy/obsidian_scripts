@@ -6,10 +6,41 @@ from sqlalchemy.orm import *
 
 from zotero_sqlite_models import Item
 
-path_zotero_sqlite = '/Users/tom/Zotero/zotero.sqlite'
+path_zotero_sqlite = Path('/Users/tom/Zotero/zotero.sqlite')
+dir_obsidian_papers = Path('/Users/tom/Main/notes/Papers')
 
 KEY_ABSTRACT_NOTE = 'abstractNote'
 LIBRARY_ID = 1
+
+
+def parse(obj):
+    all_fields = {item.field.fieldName: item.value.value for item in obj.itemData}
+
+    abstract = all_fields.get(KEY_ABSTRACT_NOTE)
+
+    info = {
+        'key': obj.key,
+        'link': f'zotero://select/items/{LIBRARY_ID}_{obj.key}',
+        'dateAdded': obj.dateAdded,
+        **{k: v for k, v in all_fields.items() if k != KEY_ABSTRACT_NOTE},
+        'creators': [
+            f'[[{creator.firstName}, {creator.lastName}]]'
+            for creator in obj.creators
+        ],
+    }
+
+    pprint.pprint(info)
+    print(f'abstract={abstract}')
+
+    return info
+
+
+def calc_filename(info):
+    return TODO
+
+
+def calc_output(info):
+    return TODO
 
 
 # ref
@@ -21,24 +52,11 @@ def main():
     session = Session(engine)
 
     stmt = select(Item).where(Item.key.in_(['IAMKX4G9']))
+
     for obj in session.scalars(stmt):
-        all_fields = {item.field.fieldName: item.value.value for item in obj.itemData}
-
-        abstract = all_fields.get(KEY_ABSTRACT_NOTE)
-
-        info = {
-            'key': obj.key,
-            'link': f'zotero://select/items/{LIBRARY_ID}_{obj.key}',
-            'dateAdded': obj.dateAdded,
-            **{k: v for k, v in all_fields.items() if k != KEY_ABSTRACT_NOTE},
-            'creators': [
-                f'[[{creator.firstName}, {creator.lastName}]]'
-                for creator in obj.creators
-            ],
-        }
-
-        pprint.pprint(info)
-        print(f'abstract={abstract}')
+        info = parse(obj)
+        filename = calc_filename(info)
+        (dir_obsidian_papers / filename).write_text(calc_output(info))
 
 
 if __name__ == '__main__':
