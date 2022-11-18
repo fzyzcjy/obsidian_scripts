@@ -18,15 +18,24 @@ META_BLACKLIST_KEYS = [
     KEY_ABSTRACT_NOTE
 ]
 
+MANUALLY_SORTED_KEYS = [
+    KEY_TITLE,
+    'zoteroLink',
+    'date',
+    'creators',
+]
+
 LIBRARY_ID = 1
 
 
 def parse(obj):
     all_fields = {item.field.fieldName: item.value.value for item in obj.itemData}
 
+    zotero_link = f'zotero://select/items/{LIBRARY_ID}_{obj.key}'
+
     info = {
         'key': obj.key,
-        'zoteroLink': f'zotero://select/items/{LIBRARY_ID}_{obj.key}',
+        'zoteroLink': f'[{zotero_link}]({zotero_link})',
         'dateAdded': obj.dateAdded,
         'creators': ' ; '.join(
             f'[[{creator.firstName}, {creator.lastName}]]'
@@ -47,11 +56,19 @@ def calc_filename(info):
 
 
 def format_meta(info):
-    return '\n'.join(
-        f'**{k}**:: {v}'
-        for k, v in info.items()
-        if k not in META_BLACKLIST_KEYS
-    )
+    def format_one_key(k):
+        return f'**{k}**:: {info[k]}'
+
+    lines = []
+
+    for key in MANUALLY_SORTED_KEYS:
+        if key in info:
+            lines.append(format_one_key(key))
+    for key in info.keys():
+        if key not in MANUALLY_SORTED_KEYS and key not in META_BLACKLIST_KEYS:
+            lines.append(format_one_key(key))
+
+    return '\n'.join(lines)
 
 
 def calc_output(info):
