@@ -1,8 +1,5 @@
-import json
-import pprint
 from pathlib import Path
 
-import yaml
 from sqlalchemy import create_engine, select
 from sqlalchemy.orm import *
 
@@ -124,7 +121,7 @@ def main():
     engine = create_engine(f"sqlite:///{path_zotero_sqlite}", echo=False)
     session = Session(engine)
 
-    stmt = select(Item).where(Item.key.in_(['IAMKX4G9']))
+    stmt = select(Item)
 
     for obj in session.scalars(stmt):
         info = parse(obj)
