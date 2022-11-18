@@ -22,7 +22,7 @@ class Item(Base):
     __tablename__ = "items"
 
     itemID = Column(Integer, primary_key=True)
-    dateAdded = Column(DateTime)
+    dateAdded = Column(String)
     key = Column(String)
 
     itemData = relationship("ItemData")

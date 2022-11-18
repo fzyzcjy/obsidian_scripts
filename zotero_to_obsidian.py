@@ -54,7 +54,7 @@ def calc_output(info):
 
 ## Abstract
 
-{front_matter[KEY_ABSTRACT_NOTE]}
+{info[KEY_ABSTRACT_NOTE]}
 
 '''
 
@@ -72,7 +72,9 @@ def main():
     for obj in session.scalars(stmt):
         info = parse(obj)
         filename = calc_filename(info)
-        (dir_obsidian_papers / filename).write_text(calc_output(info))
+        path_output = dir_obsidian_papers / filename
+        print(f'Output: {path_output}')
+        path_output.write_text(calc_output(info))
 
 
 if __name__ == '__main__':
