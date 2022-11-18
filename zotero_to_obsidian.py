@@ -69,9 +69,9 @@ def parse(obj):
 
 def calc_filename(info):
     sanitized_title = info[KEY_TITLE] \
-        .replace('/', '|') \
-        .replace('\\', '|') \
-        .replace(':', '：')
+        .replace('/', ' ') \
+        .replace('\\', ' ') \
+        .replace(':', ' ')
     return f'{sanitized_title}.md'
 
 
