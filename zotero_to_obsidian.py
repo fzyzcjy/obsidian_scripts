@@ -31,8 +31,6 @@ def parse(obj):
         **all_fields,
     }
 
-    pprint.pprint(info)
-
     return info
 
 
@@ -48,13 +46,12 @@ def calc_output(info):
     front_matter = json.loads(json.dumps(info))
     del front_matter[KEY_ABSTRACT_NOTE]
 
-    return f'''---
-{yaml.dump(front_matter)}
----
-
+    return f'''%% START AUTO BY zotero_to_obsidian.py %%
 ## Abstract
 
 {info[KEY_ABSTRACT_NOTE]}
+
+%% END AUTO BY zotero_to_obsidian.py %%
 
 '''
 
