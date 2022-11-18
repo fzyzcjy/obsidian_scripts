@@ -53,6 +53,10 @@ def calc_output(info):
 
 %% END AUTO BY zotero_to_obsidian.py %%
 
+rating:: ⭐
+
+summary:: 
+
 '''
 
 
