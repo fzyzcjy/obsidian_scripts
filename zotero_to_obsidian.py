@@ -42,7 +42,7 @@ DEFAULT_TEXT = f'''**rating**:: ⭐
 
 
 def parse(obj):
-    if len(obj.attachments) > 0:
+    if len(obj.attachments) > 0 or len(obj.annotations) > 0 or len(obj.notes) > 0:
         return None
 
     all_fields = {item.field.fieldName: item.value.value for item in obj.itemData}

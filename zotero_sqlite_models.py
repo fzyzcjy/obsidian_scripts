@@ -28,6 +28,8 @@ class Item(Base):
     itemData = relationship("ItemData", viewonly=True)
     creators = relationship("Creator", secondary=item_creator_table, viewonly=True)
     attachments = relationship("ItemAttachment", viewonly=True)
+    annotations = relationship("ItemAnnotation", viewonly=True)
+    notes = relationship("ItemNotes", viewonly=True)
 
 
 class ItemData(Base):
@@ -59,6 +61,20 @@ class Field(Base):
 
 class ItemAttachment(Base):
     __tablename__ = "itemAttachments"
+
+    itemID = Column(Integer, ForeignKey('items.itemID'), primary_key=True)
+    parentItemID = Column(Integer)
+
+
+class ItemAnnotation(Base):
+    __tablename__ = "itemAnnotations"
+
+    itemID = Column(Integer, ForeignKey('items.itemID'), primary_key=True)
+    parentItemID = Column(Integer)
+
+
+class ItemNote(Base):
+    __tablename__ = "itemNotes"
 
     itemID = Column(Integer, ForeignKey('items.itemID'), primary_key=True)
     parentItemID = Column(Integer)
