@@ -99,7 +99,7 @@ def calc_block_output(info):
 '''
 
 
-def calc_output(info, old_text):
+def calc_output(block_output, old_text):
     old_text = old_text or DEFAULT_TEXT
     old_lines = old_text.split('\n')
 
@@ -108,7 +108,7 @@ def calc_output(info, old_text):
 
     return '\n'.join([
         *old_lines[:idx_start + 1],
-        *calc_block_output(info).split('\n'),
+        *block_output.split('\n'),
         *old_lines[idx_end:],
     ])
 
@@ -128,9 +128,10 @@ def main():
         filename = calc_filename(info)
         path_output = dir_obsidian_papers / filename
         old_text = path_output.read_text() if path_output.exists() else None
+        block_output = calc_block_output(info)
 
         print(f'Output: {path_output}')
-        path_output.write_text(calc_output(info, old_text))
+        path_output.write_text(calc_output(block_output, old_text))
 
 
 if __name__ == '__main__':
