@@ -14,6 +14,7 @@ dir_obsidian_papers = Path('/Users/tom/Main/notes/Papers')
 KEY_TITLE = 'title'
 KEY_ABSTRACT_NOTE = 'abstractNote'
 KEY_DATE = 'date'
+KEY_EXTRA = 'extra'
 
 META_BLACKLIST_KEYS = [
     KEY_ABSTRACT_NOTE
@@ -47,11 +48,26 @@ def parse_date(raw_date):
     return f'{year_str}-{month_str}-{day_str}'
 
 
+def parse_extra(raw: str):
+    ans = {}
+    unknown_count = 0
+    for line in raw.split('\n'):
+        try:
+            idx = line.index(':')
+            ans[line[:idx].strip()] = line[idx + 1:].strip()
+        except ValueError:
+            ans[f'unknown_{unknown_count}'] = line
+            unknown_count += 1
+    return ans
+
+
 def parse(obj):
     if len(obj.attachments) > 0 or len(obj.annotations) > 0 or len(obj.notes) > 0:
         return None
 
     all_fields = {item.field.fieldName: item.value.value for item in obj.itemData}
+
+    parsed_extra = parse_extra(all_fields[KEY_EXTRA]) if KEY_EXTRA in all_fields else {}
 
     if KEY_TITLE not in all_fields:
         return None
@@ -66,7 +82,9 @@ def parse(obj):
             f'[[{creator.firstName}, {creator.lastName}]]'
             for creator in obj.creators
         ),
-        **all_fields,
+        **{k: v for k, v in all_fields.items() if k != KEY_EXTRA},
+        **parsed_extra,
+        # override the all_fields's date, so put it below
         'date': parse_date(all_fields[KEY_DATE]) if KEY_DATE in all_fields else '',
     }
     # print(info)
