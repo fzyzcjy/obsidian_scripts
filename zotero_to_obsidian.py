@@ -31,6 +31,9 @@ LIBRARY_ID = 1
 def parse(obj):
     all_fields = {item.field.fieldName: item.value.value for item in obj.itemData}
 
+    raw_date = all_fields['date']
+    interpolated_date, partial_date = raw_date.split(' ')
+
     zotero_link = f'zotero://select/items/{LIBRARY_ID}_{obj.key}'
 
     info = {
@@ -42,7 +45,9 @@ def parse(obj):
             for creator in obj.creators
         ),
         **all_fields,
+        'date': interpolated_date,
     }
+    print(info)
 
     return info
 
