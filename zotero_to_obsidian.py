@@ -9,6 +9,7 @@ from zotero_sqlite_models import Item
 path_zotero_sqlite = '/Users/tom/Zotero/zotero.sqlite'
 
 KEY_ABSTRACT_NOTE = 'abstractNote'
+LIBRARY_ID = 1
 
 
 # ref
@@ -27,6 +28,7 @@ def main():
 
         info = {
             'key': obj.key,
+            'link': f'zotero://select/items/{LIBRARY_ID}_{obj.key}',
             'dateAdded': obj.dateAdded,
             **{k: v for k, v in all_fields.items() if k != KEY_ABSTRACT_NOTE},
             'creators': [
