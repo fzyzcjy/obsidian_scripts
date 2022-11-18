@@ -27,6 +27,7 @@ class Item(Base):
 
     itemData = relationship("ItemData", viewonly=True)
     creators = relationship("Creator", secondary=item_creator_table, viewonly=True)
+    attachments = relationship("ItemAttachment", viewonly=True)
 
 
 class ItemData(Base):
@@ -54,6 +55,13 @@ class Field(Base):
     fieldID = Column(Integer, primary_key=True)
     fieldName = Column(String)
     fieldFormatID = Column(Integer)
+
+
+class ItemAttachment(Base):
+    __tablename__ = "itemAttachments"
+
+    itemID = Column(Integer, ForeignKey('items.itemID'), primary_key=True)
+    parentItemID = Column(Integer)
 
 
 class Creator(Base):

@@ -42,6 +42,9 @@ DEFAULT_TEXT = f'''**rating**:: ⭐
 
 
 def parse(obj):
+    if len(obj.attachments) > 0:
+        return None
+
     all_fields = {item.field.fieldName: item.value.value for item in obj.itemData}
 
     if KEY_TITLE not in all_fields:
