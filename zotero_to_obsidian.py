@@ -93,11 +93,13 @@ def parse(obj):
 
 
 def calc_filename(info):
-    sanitized_title = info[KEY_TITLE] \
-        .replace('/', ' ') \
-        .replace('\\', ' ') \
-        .replace(':', ' ')
-    return f'{sanitized_title}.md'
+    # "better bibtex" will save that in "extra" field
+    return info['Citation Key']
+    # sanitized_title = info[KEY_TITLE] \
+    #     .replace('/', ' ') \
+    #     .replace('\\', ' ') \
+    #     .replace(':', ' ')
+    # return f'{sanitized_title}.md'
 
 
 def format_meta(info):
