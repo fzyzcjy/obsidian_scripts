@@ -1,6 +1,8 @@
+import json
 import pprint
 from pathlib import Path
 
+import yaml
 from sqlalchemy import create_engine, select
 from sqlalchemy.orm import *
 
@@ -9,38 +11,52 @@ from zotero_sqlite_models import Item
 path_zotero_sqlite = Path('/Users/tom/Zotero/zotero.sqlite')
 dir_obsidian_papers = Path('/Users/tom/Main/notes/Papers')
 
+KEY_TITLE = 'title'
 KEY_ABSTRACT_NOTE = 'abstractNote'
+
 LIBRARY_ID = 1
 
 
 def parse(obj):
     all_fields = {item.field.fieldName: item.value.value for item in obj.itemData}
 
-    abstract = all_fields.get(KEY_ABSTRACT_NOTE)
-
     info = {
         'key': obj.key,
-        'link': f'zotero://select/items/{LIBRARY_ID}_{obj.key}',
+        'zoteroLink': f'zotero://select/items/{LIBRARY_ID}_{obj.key}',
         'dateAdded': obj.dateAdded,
-        **{k: v for k, v in all_fields.items() if k != KEY_ABSTRACT_NOTE},
         'creators': [
             f'[[{creator.firstName}, {creator.lastName}]]'
             for creator in obj.creators
         ],
+        **all_fields,
     }
 
     pprint.pprint(info)
-    print(f'abstract={abstract}')
 
     return info
 
 
 def calc_filename(info):
-    return TODO
+    sanitized_title = info[KEY_TITLE] \
+        .replace('/', '|') \
+        .replace('\\', '|') \
+        .replace(':', '：')
+    return f'{sanitized_title}.md'
 
 
 def calc_output(info):
-    return TODO
+    front_matter = json.loads(json.dumps(info))
+    del front_matter[KEY_ABSTRACT_NOTE]
+
+    return f'''---
+{yaml.dump(front_matter)}
+---
+
+## Abstract
+
+{front_matter[KEY_ABSTRACT_NOTE]}
+
+'''
 
 
 # ref
