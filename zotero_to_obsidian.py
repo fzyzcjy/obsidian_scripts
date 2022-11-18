@@ -10,6 +10,7 @@ dir_obsidian_papers = Path('/Users/tom/Main/notes/Papers')
 
 KEY_TITLE = 'title'
 KEY_ABSTRACT_NOTE = 'abstractNote'
+KEY_DATE = 'date'
 
 META_BLACKLIST_KEYS = [
     KEY_ABSTRACT_NOTE
@@ -42,8 +43,11 @@ DEFAULT_TEXT = f'''**rating**:: ⭐
 def parse(obj):
     all_fields = {item.field.fieldName: item.value.value for item in obj.itemData}
 
-    raw_date = all_fields['date']
-    interpolated_date, partial_date = raw_date.split(' ')
+    if KEY_TITLE not in all_fields:
+        return None
+
+    interpolated_date, partial_date = \
+        all_fields[KEY_DATE].split(' ') if KEY_DATE in all_fields else ('', '')
 
     zotero_link = f'zotero://select/items/{LIBRARY_ID}_{obj.key}'
 
@@ -95,7 +99,7 @@ def calc_block_output(info):
 
 ## Abstract
 
-{info[KEY_ABSTRACT_NOTE]}
+{info.get(KEY_ABSTRACT_NOTE) or 'N/A'}
 '''
 
 
@@ -125,6 +129,9 @@ def main():
 
     for obj in session.scalars(stmt):
         info = parse(obj)
+        if info is None:
+            continue
+
         filename = calc_filename(info)
         path_output = dir_obsidian_papers / filename
         old_text = path_output.read_text() if path_output.exists() else None
