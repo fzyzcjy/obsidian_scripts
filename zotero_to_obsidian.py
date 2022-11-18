@@ -94,7 +94,7 @@ def parse(obj):
 
 def calc_filename(info):
     # "better bibtex" will save that in "extra" field
-    return info['Citation Key']
+    return info['Citation Key'] + '.md'
     # sanitized_title = info[KEY_TITLE] \
     #     .replace('/', ' ') \
     #     .replace('\\', ' ') \
