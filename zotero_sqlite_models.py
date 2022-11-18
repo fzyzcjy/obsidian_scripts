@@ -3,6 +3,20 @@ from sqlalchemy.orm import *
 
 Base = declarative_base()
 
+# class ItemCreator(Base):
+#     __tablename__ = "itemCreators"
+#
+#     itemID = Column(Integer, primary_key=True)
+#     creatorID = Column(Integer)
+#     creatorTypeID = Column(Integer)
+#     orderIndex = Column(Integer)
+item_creator_table = Table(
+    "itemCreators",
+    Base.metadata,
+    Column("itemID", ForeignKey("items.itemID")),
+    Column("creatorID", ForeignKey("creators.creatorID")),
+)
+
 
 class Item(Base):
     __tablename__ = "items"
@@ -12,6 +26,7 @@ class Item(Base):
     key = Column(String)
 
     itemData = relationship("ItemData")
+    creators = relationship("Creator", secondary=item_creator_table)
 
 
 class ItemData(Base):
@@ -48,12 +63,3 @@ class Creator(Base):
     firstName = Column(String)
     lastName = Column(String)
     fieldMode = Column(Integer)
-
-
-class ItemCreator(Base):
-    __tablename__ = "itemCreators"
-
-    itemID = Column(Integer, primary_key=True)
-    creatorID = Column(Integer)
-    creatorTypeID = Column(Integer)
-    orderIndex = Column(Integer)

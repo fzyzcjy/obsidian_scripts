@@ -29,6 +29,10 @@ def main():
             'key': obj.key,
             'dateAdded': obj.dateAdded,
             **{k: v for k, v in all_fields.items() if k != KEY_ABSTRACT_NOTE},
+            'creators': [
+                f'[[{creator.firstName}, {creator.lastName}]]'
+                for creator in obj.creators
+            ],
         }
 
         pprint.pprint(info)
