@@ -30,6 +30,7 @@ class Item(Base):
     attachments = relationship("ItemAttachment", viewonly=True)
     annotations = relationship("ItemAnnotation", viewonly=True)
     notes = relationship("ItemNote", viewonly=True)
+    collections = relationship("CollectionItem", viewonly=True)
 
 
 class ItemData(Base):
@@ -57,6 +58,13 @@ class Field(Base):
     fieldID = Column(Integer, primary_key=True)
     fieldName = Column(String)
     fieldFormatID = Column(Integer)
+
+
+class CollectionItem(Base):
+    __tablename__ = "collectionItems"
+
+    collectionID = Column(Integer, primary_key=True)
+    itemID = Column(Integer, ForeignKey('items.itemID'), primary_key=True)
 
 
 class ItemAttachment(Base):

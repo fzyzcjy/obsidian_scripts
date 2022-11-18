@@ -84,10 +84,13 @@ def format_meta(info):
     return '\n'.join(lines)
 
 
-def calc_default_full_text(info):
-    return f'''**status**:: unread
+def calc_default_full_text(obj, info):
+    status = 'unread'
+    areas = ''
 
-**areas**: 
+    return f'''**status**:: {status}
+
+**areas**: {areas}
 
 **rating**:: ⭐
 
@@ -143,7 +146,7 @@ def main():
 
         filename = calc_filename(info)
         path_output = dir_obsidian_papers / filename
-        old_text = path_output.read_text() if path_output.exists() else calc_default_full_text(info)
+        old_text = path_output.read_text() if path_output.exists() else calc_default_full_text(obj, info)
         block_output = calc_block_output(info)
 
         # print(f'Output: {path_output}')
