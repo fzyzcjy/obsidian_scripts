@@ -11,13 +11,19 @@ class Item(Base):
     dateAdded = Column(DateTime)
     key = Column(String)
 
+    itemData = relationship("ItemData")
+
 
 class ItemData(Base):
     __tablename__ = "itemData"
 
-    itemID = Column(Integer, primary_key=True)
-    fieldID = Column(Integer)
-    valueID = Column(Integer)
+    itemID = Column(Integer, ForeignKey('items.itemID'), primary_key=True)
+    fieldID = Column(Integer, ForeignKey('fields.fieldID'), primary_key=True)
+    valueID = Column(Integer, ForeignKey('itemDataValues.valueID'))
+
+    item = relationship("Item")
+    field = relationship("Field")
+    value = relationship("ItemDataValue")
 
 
 class ItemDataValue(Base):
