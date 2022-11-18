@@ -29,7 +29,7 @@ class Item(Base):
     creators = relationship("Creator", secondary=item_creator_table, viewonly=True)
     attachments = relationship("ItemAttachment", viewonly=True)
     annotations = relationship("ItemAnnotation", viewonly=True)
-    notes = relationship("ItemNotes", viewonly=True)
+    notes = relationship("ItemNote", viewonly=True)
 
 
 class ItemData(Base):
