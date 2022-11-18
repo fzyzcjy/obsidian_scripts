@@ -1,3 +1,4 @@
+import sys
 from pathlib import Path
 
 from sqlalchemy import create_engine, select
@@ -86,11 +87,25 @@ def format_meta(info):
 
 def calc_default_full_text(obj, info):
     status = 'unread'
-    areas = ''
+    area = 'unclassified'
 
-    return f'''**status**:: {status}
+    # NOTE only for temporary migration!
+    # the values are created by looking at `collections` table manually
+    collection_id = obj.collections[0].collectionID
+    if collection_id in [11, 8]:
+        area = sys.argv[1]
+    elif collection_id in [16]:
+        area = f'{sys.argv[1]}-related'
+    else:
+        status = 'done'
+        area = 'misc'
 
-**areas**: {areas}
+    return f'''---
+tags:
+  - area/{area}
+---
+
+**status**:: {status}
 
 **rating**:: ⭐
 
