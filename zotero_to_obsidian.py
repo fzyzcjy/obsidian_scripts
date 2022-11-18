@@ -14,6 +14,10 @@ dir_obsidian_papers = Path('/Users/tom/Main/notes/Papers')
 KEY_TITLE = 'title'
 KEY_ABSTRACT_NOTE = 'abstractNote'
 
+META_BLACKLIST_KEYS = [
+    KEY_ABSTRACT_NOTE
+]
+
 LIBRARY_ID = 1
 
 
@@ -24,10 +28,10 @@ def parse(obj):
         'key': obj.key,
         'zoteroLink': f'zotero://select/items/{LIBRARY_ID}_{obj.key}',
         'dateAdded': obj.dateAdded,
-        'creators': [
+        'creators': ' ; '.join(
             f'[[{creator.firstName}, {creator.lastName}]]'
             for creator in obj.creators
-        ],
+        ),
         **all_fields,
     }
 
@@ -42,11 +46,21 @@ def calc_filename(info):
     return f'{sanitized_title}.md'
 
 
-def calc_output(info):
-    front_matter = json.loads(json.dumps(info))
-    del front_matter[KEY_ABSTRACT_NOTE]
+def format_meta(info):
+    return '\n'.join(
+        f'**{k}**:: {v}'
+        for k, v in info.items()
+        if k not in META_BLACKLIST_KEYS
+    )
 
+
+def calc_output(info):
     return f'''%% START AUTO BY zotero_to_obsidian.py %%
+
+## Metadata
+
+{format_meta(info)}
+
 ## Abstract
 
 {info[KEY_ABSTRACT_NOTE]}
