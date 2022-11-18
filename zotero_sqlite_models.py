@@ -25,8 +25,8 @@ class Item(Base):
     dateAdded = Column(String)
     key = Column(String)
 
-    itemData = relationship("ItemData")
-    creators = relationship("Creator", secondary=item_creator_table)
+    itemData = relationship("ItemData", viewonly=True)
+    creators = relationship("Creator", secondary=item_creator_table, viewonly=True)
 
 
 class ItemData(Base):
