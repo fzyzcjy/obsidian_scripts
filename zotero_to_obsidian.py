@@ -2,6 +2,7 @@ from pathlib import Path
 
 from sqlalchemy import create_engine, select
 from sqlalchemy.orm import *
+from tqdm import tqdm
 
 from zotero_sqlite_models import Item
 
@@ -62,7 +63,7 @@ def parse(obj):
         **all_fields,
         'date': interpolated_date,
     }
-    print(info)
+    # print(info)
 
     return info
 
@@ -127,7 +128,7 @@ def main():
 
     stmt = select(Item)
 
-    for obj in session.scalars(stmt):
+    for obj in tqdm(list(session.scalars(stmt))):
         info = parse(obj)
         if info is None:
             continue
@@ -137,7 +138,7 @@ def main():
         old_text = path_output.read_text() if path_output.exists() else None
         block_output = calc_block_output(info)
 
-        print(f'Output: {path_output}')
+        # print(f'Output: {path_output}')
         path_output.write_text(calc_output(block_output, old_text))
 
 
