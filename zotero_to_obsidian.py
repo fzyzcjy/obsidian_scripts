@@ -122,16 +122,16 @@ def calc_default_full_text(obj, info):
     status = 'unread'
     area = 'unclassified'
 
-    # NOTE only for temporary migration!
-    # the values are created by looking at `collections` table manually
-    collection_id = obj.collections[0].collectionID if len(obj.collections) > 0 else None
-    if collection_id in [11, 8]:
-        area = sys.argv[1]
-    elif collection_id in [16]:
-        area = f'{sys.argv[1]}-related'
-    else:
-        status = 'done'
-        area = 'misc'
+    # # NOTE only for temporary migration!
+    # # the values are created by looking at `collections` table manually
+    # collection_id = obj.collections[0].collectionID if len(obj.collections) > 0 else None
+    # if collection_id in [11, 8]:
+    #     area = sys.argv[1]
+    # elif collection_id in [16]:
+    #     area = f'{sys.argv[1]}-related'
+    # else:
+    #     status = 'done'
+    #     area = 'misc'
 
     return f'''---
 tags:
