@@ -8,7 +8,7 @@ from tqdm import tqdm
 
 from zotero_sqlite_models import Item
 
-path_zotero_sqlite = Path('/Users/tom/Zotero/zotero.sqlite')
+path_zotero_sqlite = Path('/Users/tom/Main/Zotero/zotero.sqlite')
 dir_obsidian_papers = Path('/Users/tom/Main/notes/Papers')
 
 KEY_TITLE = 'title'
