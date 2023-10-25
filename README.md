@@ -1,0 +1,1 @@
+Because I have moved the code into my internal monorepo, this GitHub repo contains out-of-date code. If you want to use the latest full-featured script, just create an issue! (I usually reply quickly)
